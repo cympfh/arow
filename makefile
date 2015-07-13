@@ -7,3 +7,6 @@ test: arow
 
 arow: main.cc parse.cc arow.hh arow.cc
 	g++ -std=c++11 main.cc -o $@
+
+clean:
+	rm ./arow
