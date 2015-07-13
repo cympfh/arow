@@ -1,0 +1,14 @@
+#!/bin/sh
+
+cat << EOM > /tmp/vis.gp
+set terminal x11
+plot '/tmp/mistakes.dat' with lp
+pause -1
+EOM
+
+for f in *.log; do
+  echo $f
+  cat $f | awk -v m=0 '{m=m+1-$0;print m}' > /tmp/mistakes.dat
+  gnuplot /tmp/vis.gp
+done
+
