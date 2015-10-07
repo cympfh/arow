@@ -1,7 +1,7 @@
 #include "./arow.hh"
 
 int n;
-Real r;
+Real r = 1.0;
 
 vr A(0);
 
@@ -75,4 +75,10 @@ update_diag(vr& mu, vr& sigma, int y, const vr& x)
   }
 
   return correct;
+}
+
+int test(const vr& mu, const vr& x) {
+  Real r = 0.0;
+  rep (i, mu.size()) r += mu[i] * x[i];
+  return r > 0 ? 1 : -1;
 }

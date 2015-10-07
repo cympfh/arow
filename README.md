@@ -1,27 +1,28 @@
 # AROW
 
 AROWの実装を与える.
-学習の部分だけである.
-最終的に得られた `mu` を使って勝手に分類すればいい.
 
-## AROW 自体の説明
+## AROW の原理
 
-線形分類器のオンライン学習の一つである.
-詳しい説明は [pdf](http://cympfh.cc/study/ai/arow.pdf) にある.
-pdf 中の `r` というパラメータ変数は本プログラムでも共通.
+- [http://cympfh.cc/study/ai/arow.pdf](http://cympfh.cc/study/ai/arow.pdf)
+
+特に `r` パラメタはこのスライドのものと一致して用いる.
 
 ## 使い方 (コマンドライン)
 
-学習 (ラベルと点の集合) ファイルと、モデルファイルとがある.
-
 できることは、
 
-1. 学習ファイル (正解ラベルがついた) をオンライン学習して結果をモデルとして吐く.
-1. 以前の学習結果を読み込んで、続けて別な学習ファイルをオンライン学習して結果をモデルとして吐く.
+1. 学習ファイル (正解ラベル附) をオンライン学習して結果をモデルとして吐く.
+1. モデルを読み込んで別な学習ファイル (同じ次元であること) を加えて学習してモデルを吐く.
+1. モデルを読み込んで、新しい予測、あるいはテストを行う.
 
-```bash
-./arow < datum > model # 新しく datum を学習して結果を model として保存
-./arow -f model < datum2 > model2 # modelを読み込んで datum2 を学習して結果を model2 として保存する (datumとdatum2を結合してから学習する結果と厳密に一致する)
+```
+$ ./arow -?
+  --diag or -D       set diagonalize=true (in default: false). ignored when -f
+  -r <double>        set the parameter `r` (in default: 1.0). ignored when -f
+  -f <model-path>    load a model file
+  --test             test (or predict) with a model (requires -f)
+  --verbose or -V    noisy
 ```
 
 ### makefile より
@@ -35,15 +36,6 @@ pdf 中の `r` というパラメータ変数は本プログラムでも共通.
 ```
 
 ## オプション
-
-```bash
-./arow --help
---help or -?
---diag or -D: diagonalize (in default: no). ignored when -f
--r <long double>: configure the parameter `r` (in default: 1.0). ignored when -f
--f <file>: load a model file
---verbose or -V
-```
 
 ### `-diag` `-D`
 対角モード.
@@ -62,6 +54,13 @@ pdf 中の `r` というパラメータ変数は本プログラムでも共通.
 モデルには、パラメータ`p` と、対角モードを行うかどうかの情報が含まれており、
 強制的にそれらを用いる.
 
+### `--test`
+
+標準入力から、学習データと同じフォーマットのものを読み (ラベルが不明な場合は0など)、
+`-f` からモデルを読み (実際には `mu` のみ用いる)、
+実際に予測をした結果を標準出力する.
+標準エラーにAccとF1を出力する (ラベルとの一致を確認する).
+
 ### `-v`
 冗長モード. 小うるさいモード
 
@@ -78,12 +77,11 @@ n
 y_1 x_11 x_12 ... x_1n
  :
 y_n x_n1 x_n2 ... x_nn
-0
 ```
 
 `n` は自然数.
 `y_i` は `1` または `-1`.
-`x_ij` は long double で記述できる数値.
+`x_ij` は `long double` で記述できる数値.
 
 意味として、`n`は点`x`が存在する空間の次元数.
 `x = (x1, .. xn)`
@@ -136,4 +134,32 @@ cd log
 - `sample/noise` を普通にオンライン学習
 - `sample/noise` を対角モードでオンライン学習
 - `sample/linear` を普通に学習したあと、 `sample/noise` を普通にオンライン学習する
+
+## 例
+
+データの前半で学習して後半でテストしてみる.
+
+```bash
+% wc -l sample/linear
+1001 sample/linear
+```
+最初の一行は次元数、続く1000行にデータ.
+
+```bash
+% head -n 501 sample/linear | ./arow > hoge.model
+```
+
+頭の500データで学習
+
+```bash
+% ( head -1 sample/linear; tail -n 500 sample/linear ) | ./arow -f hoge.model --test >/dev/null
+Acc 0.994
+Rec 0.970874
+Prec 1
+F1 0.985222
+```
+
+末尾の500データでテスト.
+
+
 
