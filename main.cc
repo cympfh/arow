@@ -123,8 +123,8 @@ int main(int argc, char*argv[]) {
         ++d;
       }
     }
-    cerr << predicts << endl;
-    cerr << a << ' ' << b << ' ' << c << ' ' << d << endl;
+    // cerr << predicts << endl;
+    // cerr << a << ' ' << b << ' ' << c << ' ' << d << endl;
     cerr << "Acc " << (double(a+d) / double(a+b+c+d)) << endl;
     cerr << "Rec " << (double(a) / double(a+b)) << endl;
     cerr << "Prec " << (double(a) / double(a+c)) << endl;
