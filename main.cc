@@ -117,12 +117,14 @@ int main(int argc, char*argv[]) {
         ++a;
       } else if (ans[i] == 1) {
         ++b;
-      } else if (ans[i] == 0 and predicts[i] == 1) {
+      } else if (predicts[i] == 1) {
         ++c;
       } else {
         ++d;
       }
     }
+    cerr << predicts << endl;
+    cerr << a << ' ' << b << ' ' << c << ' ' << d << endl;
     cerr << "Acc " << (double(a+d) / double(a+b+c+d)) << endl;
     cerr << "Rec " << (double(a) / double(a+b)) << endl;
     cerr << "Prec " << (double(a) / double(a+c)) << endl;

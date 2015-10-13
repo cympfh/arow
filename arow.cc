@@ -2,6 +2,7 @@
 
 int n;
 Real r = 1.0;
+Real r0 = 1.0;
 
 vr A(0);
 
@@ -31,7 +32,11 @@ update(vr& mu, vvr& Sigma, int y, const vr& x)
   // update mu
   if (1.0 > y * yy) {
     Real diff = 1.0 - y * yy;
-    rep (i, n) { mu[i] += diff * y / (q + r) * A[i]; }
+    if (y > 0) {
+      rep (i, n) { mu[i] += diff * y / (q + r) * A[i]; }
+    } else {
+      rep (i, n) { mu[i] += diff * y / (q + r0) * A[i]; }
+    }
   }
 
   // update Sigma
@@ -66,7 +71,11 @@ update_diag(vr& mu, vr& sigma, int y, const vr& x)
   // update mu
   if (1.0 > y * yy) {
     Real diff = 1.0 - y * yy;
-    rep (i, n) { mu[i] += diff * y / (q + r) * A[i]; }
+    if (y > 0) {
+      rep (i, n) { mu[i] += diff * y / (q + r) * A[i]; }
+    } else {
+      rep (i, n) { mu[i] += diff * y / (q + r0) * A[i]; }
+    }
   }
 
   // update Sigma

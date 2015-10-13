@@ -8,6 +8,12 @@ else if (s == "-f") {
 else if (s == "-r") {
   stringstream ss(string(argv[i+1]));
   ss >> r;
+  r0 = r;
+  ++i;
+}
+else if (s == "-r0") {
+  stringstream ss(string(argv[i+1]));
+  ss >> r0;
   ++i;
 }
 else if (s == "--verbose" or s == "-v" or s == "-V") {
