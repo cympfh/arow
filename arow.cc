@@ -9,6 +9,11 @@ vr A(0);
 bool
 update(vr& mu, vvr& Sigma, int y, const vr& x)
 {
+  assert(mu.size() == n);
+  assert(Sigma.size() == n);
+  assert(Sigma[0].size() == n);
+  assert(x.size() == n);
+
   // A = Sigma * x
   if (A.size() < n) { A = vr(n, 0); } // init (once)
   rep (i, n) {
@@ -52,6 +57,10 @@ update(vr& mu, vvr& Sigma, int y, const vr& x)
 bool
 update_diag(vr& mu, vr& sigma, int y, const vr& x)
 {
+  assert(mu.size() == n);
+  assert(sigma.size() == n);
+  assert(x.size() == n);
+
   // A = Sigma * x
   if (A.size() < n) { A = vr(n, 0); } // init (once)
   rep (i, n) { A[i] = sigma[i] * x[i]; }
